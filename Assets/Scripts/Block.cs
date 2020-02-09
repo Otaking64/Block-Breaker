@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class Block : MonoBehaviour
     [SerializeField] int maxHits;
     [SerializeField] AudioClip breakSound;
     [SerializeField] GameObject blockSparklesVFX;
+    [SerializeField] Sprite[] hitSprites;
 
 
     Level level;
@@ -43,7 +45,9 @@ public class Block : MonoBehaviour
 
     private void HandleHit()
     {
+
         timesHit++;
+        
         if (timesHit >= maxHits)
         {
             AudioSource.PlayClipAtPoint(breakSound, Camera.main.transform.position);
@@ -52,6 +56,20 @@ public class Block : MonoBehaviour
             level.BlockDestroyed();
             gameStatus.AddToScore();
         }
+        else
+        {
+            ShowNextHitSprite();
+        }
+    }
+
+    private void ShowNextHitSprite()
+    {
+        int spriteIndex = timesHit - 1;
+        if(hitSprites[spriteIndex] != null)
+        {
+            GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
+        }
+        
     }
 
     private void TriggerSparklesVFX()
